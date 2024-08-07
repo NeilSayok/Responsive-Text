@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("maven-publish")
 }
 
 android {
@@ -42,12 +43,24 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
 
-    implementation (platform("androidx.compose:compose-bom:2024.06.00"))
-    implementation ("androidx.compose.ui:ui")
-    implementation ("androidx.compose.material:material")
-    implementation("androidx.compose.material3:material3:1.2.0")
+    implementation (platform(libs.androidx.compose.bom.v20240600))
+    implementation (libs.ui)
+    implementation (libs.androidx.material)
+    implementation(libs.material3)
 
-//    implementation ("androidx.compose.ui:ui-tooling-preview")
-//    implementation ("androidx.compose.ui:ui-tooling")
-//    implementation ("androidx.compose.ui:ui-util")
+}
+
+
+afterEvaluate {
+    publishing {
+        publications {
+            create("release", MavenPublication::class) {
+                from(components["release"])
+
+                groupId = "in.bluelabs.responsive_text"
+                artifactId = "responsive_text"
+                version = "1.0"
+            }
+        }
+    }
 }
